@@ -18,12 +18,17 @@ class OlxspiderSpider(scrapy.Spider):
             try:  
                 
                 yield {
-                'title': response.css('span.YBbhy::text').getall() ,
-                'price': response.css('span._2Ks63::text').getall() ,
+                'title': response.css('span.YBbhy::text').get() ,
+                'description':response.css('span._2poNJ::text').get(),
+                'price': response.css('span._2Ks63::text').get() ,
                 }
             except:
                 yield{
                     
-                'title': response.css('span.YBbhy::text').getall() ,
+                'title': response.css('span.YBbhy::text').get() ,
+                'description':response.css('span._2poNJ::text').get(),
                 'price': 'sold out',
                 }   
+        next_page = response.css('div._38O09') 
+        if next_page is not None:
+            yield response.follow(next_page,callback=self.parse)
